@@ -1,7 +1,7 @@
 {
-  "name": "info-card",
+  "name": "status-message",
   "version": "0.0.0",
-  "description": "Info card",
+  "description": "Status Message",
   "homepage": "",
   "author": {
     "name": "Hugo SCHOCH",
@@ -14,17 +14,17 @@
   ],
   "keywords": [
     "setup",
-    "info-card",
+    "status-message",
     "nodecg-bundle"
   ],
   "nodecg": {
     "compatibleRange": "^1.1.1",
     "dashboardPanels": [
       {
-        "name": "info-card",
-        "title": "Info Card",
+        "name": "status-message",
+        "title": "Status Message",
         "width": 3,
-        "file": "info-card.html",
+        "file": "status-message.html",
         "headerColor": "#607D8B"
       }
     ],
@@ -36,6 +36,6 @@
       }
     ]
   },
-  "repository": "git@github.com:hug33k/stream_setup.git",
+  "repository": "git@github.com:hug33k/gdg_streaming_setup.git",
   "license": "Apache-2.0"
 }

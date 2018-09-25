@@ -22,7 +22,7 @@
 			flex: 1;
 		}
 
-		#info-card-status-clear {
+		#status-message-status-clear {
 			width: 100%;
 		}
 
@@ -37,37 +37,37 @@
 	Current : <div id="status-badge"></div>
 </div>
 <div class="item modes">
-	<button id="info-card-status-incoming">Incoming</button>
-	<button id="info-card-status-afk">AFK</button>
-	<button id="info-card-status-end">End</button>
+	<button id="status-message-status-incoming">Incoming</button>
+	<button id="status-message-status-afk">AFK</button>
+	<button id="status-message-status-end">End</button>
 </div>
 <div class="item">
-	<button id="info-card-status-clear">Clear</button>
+	<button id="status-message-status-clear">Clear</button>
 </div>
 <div class="item">
 	<label>
 		Custom title
-		<input type="text" id="info-card-custom-title">
+		<input type="text" id="status-message-custom-title">
 	</label>
 </div>
 <div class="item">
 	<label>
 		Custom subtitle
-		<input type="text" id="info-card-custom-subtitle">
+		<input type="text" id="status-message-custom-subtitle">
 	</label>
 </div>
 <script>
-	const stream_info_card = nodecg.Replicant('stream_info_card', {defaultValue: {mode: null, title: "", subtitle: ""}});
+	const stream_status_message = nodecg.Replicant('stream_status_message', {defaultValue: {mode: null, title: "", subtitle: ""}});
 
 	const status_badge = document.getElementById('status-badge');
-	const status_switch_incoming = document.getElementById('info-card-status-incoming');
-	const status_switch_afk = document.getElementById('info-card-status-afk');
-	const status_switch_end = document.getElementById('info-card-status-end');
-	const status_switch_clear = document.getElementById('info-card-status-clear');
-	const input_title = document.getElementById('info-card-custom-title');
-	const input_subtitle = document.getElementById('info-card-custom-subtitle');
+	const status_switch_incoming = document.getElementById('status-message-status-incoming');
+	const status_switch_afk = document.getElementById('status-message-status-afk');
+	const status_switch_end = document.getElementById('status-message-status-end');
+	const status_switch_clear = document.getElementById('status-message-status-clear');
+	const input_title = document.getElementById('status-message-custom-title');
+	const input_subtitle = document.getElementById('status-message-custom-subtitle');
 
-	stream_info_card.on('change', (info) => {
+	stream_status_message.on('change', (info) => {
 		status_badge.innerText = (info.mode ? info.mode : "Nothing");
 		input_title.value = info.title;
 		input_subtitle.value = info.subtitle;
@@ -75,22 +75,22 @@
 
 	const switchMode = (mode=null, title="", subtitle="") => {
 		nodecg.log.info("Switch info card to \"" + (mode ? mode : "No-mode") + "\" mode");
-		stream_info_card.value = {mode, title, subtitle};
+		stream_status_message.value = {mode, title, subtitle};
 	};
 
 	status_switch_incoming.onclick = (e) => {
 		e.preventDefault();
-		switchMode("incoming", "Stream incoming", "Please wait...");
+		switchMode("incoming", "Début de stream dans un instant", "Merci de patienter...");
 	};
 
 	status_switch_afk.onclick = (e) => {
 		e.preventDefault();
-		switchMode("afk", "AFK", "I'll be back soon !");
+		switchMode("afk", "Pause", "À tout de suite !");
 	};
 
 	status_switch_end.onclick = (e) => {
 		e.preventDefault();
-		switchMode("end", "End of stream", "See you next time !");
+		switchMode("end", "Fin du stream", "À bientôt !");
 	};
 
 	status_switch_clear.onclick = (e) => {
@@ -101,13 +101,13 @@
 	input_title.onchange = (e) => {
 		e.preventDefault();
 		nodecg.log.info("New custom info card title : " + e.target.value);
-		stream_info_card.value.title = e.target.value;
+		stream_status_message.value.title = e.target.value;
 	};
 
 	input_subtitle.onchange = (e) => {
 		e.preventDefault();
 		nodecg.log.info("New custom info card subtitle : " + e.target.value);
-		stream_info_card.value.subtitle = e.target.value;
+		stream_status_message.value.subtitle = e.target.value;
 	};
 </script>
 </body>

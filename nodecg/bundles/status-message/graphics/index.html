@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Info Card</title>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<style>
 		body {
 			padding: 0;
@@ -26,15 +25,6 @@
 			border-radius: 5px;
 		}
 
-		#icon {
-			text-align: center;
-		}
-
-		#icon i {
-			font-size: 500px;
-			color: #607D8B;
-		}
-
 		#title,
 		#subtitle {
 			text-align: center;
@@ -52,14 +42,12 @@
 		}
 
 		#app,
-		#icon i,
 		#title,
 		#subtitle {
 			transition: all 1s linear;
 		}
 
 		#app.hidden,
-		#icon i.hidden,
 		#title.hidden,
 		#subtitle.hidden {
 			opacity: 0;
@@ -68,54 +56,35 @@
 </head>
 <body>
 <div id="app">
-	<div id="icon">
-		<i class="material-icons"></i>
-	</div>
 	<div class="text">
 		<div id="title"></div>
 		<div id="subtitle"></div>
 	</div>
 </div>
 <script>
-	const updateCard = ({mode, title, subtitle}) => {
+	const updateMessage = ({mode, title, subtitle}) => {
 		const card = document.getElementById('app');
-		const icon = document.getElementById('icon').getElementsByTagName('i')[0];
 		const titleNode = document.getElementById('title');
 		const subtitleNode = document.getElementById('subtitle');
 		if (mode !== null)
 			card.classList.remove('hidden');
 		else
 			card.classList.add('hidden');
-		icon.classList.add('hidden');
 		titleNode.classList.add('hidden');
 		subtitleNode.classList.add('hidden');
 		setTimeout(() => {
-			switch (mode) {
-				case "incoming":
-					icon.innerText = "access_time";
-					break;
-				case "afk":
-					icon.innerText = "directions_run";
-					break;
-				case "end":
-					icon.innerText = "tv_off";
-					break;
-				default:
-					icon.innerText = "";
-			}
 			titleNode.innerText = title;
 			subtitleNode.innerText = subtitle;
 		}, 1000);
 		setTimeout(() => {
-			icon.classList.remove('hidden');
 			titleNode.classList.remove('hidden');
 			subtitleNode.classList.remove('hidden');
 		}, 1000);
 	};
 
-	const stream_info_card = nodecg.Replicant('stream_info_card', {defaultValue: {mode: null, title: "", subtitle: ""}});
+	const stream_status_message = nodecg.Replicant('stream_status_message', {defaultValue: {mode: null, title: "", subtitle: ""}});
 
-	stream_info_card.on('change', updateCard);
+	stream_status_message.on('change', updateMessage);
 </script>
 </body>
 </html>

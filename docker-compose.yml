@@ -2,17 +2,17 @@ version: '3'
 
 services:
 
+  rtmp:
+    build: ./rtmp
+    image: rtmp_server
+    ports:
+      - 1935:1935
+    restart: always
+
   nodecg:
     image: nodecg/nodecg
     ports:
      - 9090:9090
     volumes:
      - ./nodecg/bundles:/usr/src/app/bundles
-    restart: always
-
-  rtmp:
-    build: ./rtmp
-    image: rtmp_server
-    ports:
-      - 1935:1935
     restart: always
