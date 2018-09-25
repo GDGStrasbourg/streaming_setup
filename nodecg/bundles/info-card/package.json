@@ -1,0 +1,41 @@
+{
+  "name": "info-card",
+  "version": "0.0.0",
+  "description": "Info card",
+  "homepage": "",
+  "author": {
+    "name": "Hugo SCHOCH",
+    "email": "schoch.hugo@gmail.com",
+    "url": ""
+  },
+  "files": [
+    "dashboard",
+    "graphics"
+  ],
+  "keywords": [
+    "setup",
+    "info-card",
+    "nodecg-bundle"
+  ],
+  "nodecg": {
+    "compatibleRange": "^1.1.1",
+    "dashboardPanels": [
+      {
+        "name": "info-card",
+        "title": "Info Card",
+        "width": 3,
+        "file": "info-card.html",
+        "headerColor": "#607D8B"
+      }
+    ],
+    "graphics": [
+      {
+        "file": "index.html",
+        "width": 1020,
+        "height": 820
+      }
+    ]
+  },
+  "repository": "git@github.com:hug33k/stream_setup.git",
+  "license": "Apache-2.0"
+}

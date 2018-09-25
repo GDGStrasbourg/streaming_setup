@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<style>
+		#status-badge {
+			width: 50%;
+			float: right;
+			text-align: center;
+			text-transform: capitalize;
+		}
+
+		.item {
+			margin: 15px 0;
+		}
+
+		.item.modes {
+			display: flex;
+		}
+
+		.item.modes button {
+			flex: 1;
+		}
+
+		#info-card-status-clear {
+			width: 100%;
+		}
+
+		input {
+			float: right;
+			width: 50%;
+		}
+	</style>
+</head>
+<body>
+<div class="status">
+	Current : <div id="status-badge"></div>
+</div>
+<div class="item modes">
+	<button id="info-card-status-incoming">Incoming</button>
+	<button id="info-card-status-afk">AFK</button>
+	<button id="info-card-status-end">End</button>
+</div>
+<div class="item">
+	<button id="info-card-status-clear">Clear</button>
+</div>
+<div class="item">
+	<label>
+		Custom title
+		<input type="text" id="info-card-custom-title">
+	</label>
+</div>
+<div class="item">
+	<label>
+		Custom subtitle
+		<input type="text" id="info-card-custom-subtitle">
+	</label>
+</div>
+<script>
+	const stream_info_card = nodecg.Replicant('stream_info_card', {defaultValue: {mode: null, title: "", subtitle: ""}});
+
+	const status_badge = document.getElementById('status-badge');
+	const status_switch_incoming = document.getElementById('info-card-status-incoming');
+	const status_switch_afk = document.getElementById('info-card-status-afk');
+	const status_switch_end = document.getElementById('info-card-status-end');
+	const status_switch_clear = document.getElementById('info-card-status-clear');
+	const input_title = document.getElementById('info-card-custom-title');
+	const input_subtitle = document.getElementById('info-card-custom-subtitle');
+
+	stream_info_card.on('change', (info) => {
+		status_badge.innerText = (info.mode ? info.mode : "Nothing");
+		input_title.value = info.title;
+		input_subtitle.value = info.subtitle;
+	});
+
+	const switchMode = (mode=null, title="", subtitle="") => {
+		nodecg.log.info("Switch info card to \"" + (mode ? mode : "No-mode") + "\" mode");
+		stream_info_card.value = {mode, title, subtitle};
+	};
+
+	status_switch_incoming.onclick = (e) => {
+		e.preventDefault();
+		switchMode("incoming", "Stream incoming", "Please wait...");
+	};
+
+	status_switch_afk.onclick = (e) => {
+		e.preventDefault();
+		switchMode("afk", "AFK", "I'll be back soon !");
+	};
+
+	status_switch_end.onclick = (e) => {
+		e.preventDefault();
+		switchMode("end", "End of stream", "See you next time !");
+	};
+
+	status_switch_clear.onclick = (e) => {
+		e.preventDefault();
+		switchMode();
+	};
+
+	input_title.onchange = (e) => {
+		e.preventDefault();
+		nodecg.log.info("New custom info card title : " + e.target.value);
+		stream_info_card.value.title = e.target.value;
+	};
+
+	input_subtitle.onchange = (e) => {
+		e.preventDefault();
+		nodecg.log.info("New custom info card subtitle : " + e.target.value);
+		stream_info_card.value.subtitle = e.target.value;
+	};
+</script>
+</body>
+</html>
