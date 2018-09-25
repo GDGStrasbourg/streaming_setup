@@ -73,4 +73,20 @@ $> docker exec -it $CONTAINER_NAME stream
 
 ### NodeCG
 
-TODO
+NodeCG is a Node.JS based server to manage visual items (bundles).
+
+Its dashboard is available on port 9090.
+
+#### Bundles
+
+##### Status Message
+
+This bundle handles status message (e.g. "Début de stream dans un instant").
+It has 3 basic modes (Incoming, AFK, End) and a Clear mode, but you can also customize status message using input fields.
+
+## TODO
+
+- [ ] Chatroom integration
+- [ ] Twitch notifications (Follow, subscription, bits, ...)
+- [ ] YouTube notifications (Subscribe, like, ...)
+- [ ] ...
