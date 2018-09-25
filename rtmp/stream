@@ -1,0 +1,112 @@
+#!/bin/sh python
+
+import sys
+import os
+import argparse
+import uuid
+
+parser = argparse.ArgumentParser(description="Stream manager")
+parser.add_argument('-v', '--verbose', help="Verbose mode", action='store_true')
+
+# Twitch
+parser.add_argument('--twitch', type=str, help="Twitch streaming key", metavar="streaming_key")
+parser.add_argument('--twitch-server', default="rtmp://live-cdg.twitch.tv/app/", type=str, help="Twitch streaming server", metavar="streaming_server")
+parser.add_argument('--twitch-test', help="Switch to bandwidth test mode on Twitch", action='store_true')
+
+# YouTube
+parser.add_argument('--youtube', type=str, help="YouTube streaming key", metavar="streaming_key")
+parser.add_argument('--youtube-server', default="rtmp://a.rtmp.youtube.com/live2/", type=str, help="YouTube streaming server", metavar="streaming_server")
+
+config_template = """
+rtmp {
+
+    server {
+
+        listen  1935;
+        chunk_size 4096;
+
+        $APPLICATION
+
+    }
+
+}
+"""
+
+application_template = """
+        application $NAME {
+            live on;
+            record off;
+            $PLATFORMS
+        }
+"""
+
+
+def add_platform(service, server, key, args=None):
+    formated_args = ""
+    if (args):
+        formated_args = "?" + "&".join(args)
+    return """
+            # {service}
+            push {server}{key}{args}
+""".format(service=service, server=server, key=key, args=formated_args)
+
+
+def generate_config(args):
+    platforms = []
+    application = ""
+    application_name = "live_{id}".format(id=str(uuid.uuid4()))
+    
+    # Twitch support
+    if (args.twitch):
+        platforms.append(add_platform("Twitch", args.twitch_server, args.twitch, ["bandwidthtest=true"] if args.twitch_test else None))
+
+    # YouTube support
+    if (args.youtube):
+        platforms.append(add_platform("YouTube", args.youtube_server, args.youtube))
+
+    if (len(platforms) != 0):
+        application = application_template.replace("$NAME", application_name)
+        application = application.replace("$PLATFORMS", "\n".join(platforms))
+    return config_template.replace("$APPLICATION", application), len(platforms), application_name
+
+
+def write_config(config):
+    try:
+        with open("/etc/nginx/rtmp.conf", "w") as rtmp_config:
+            rtmp_config.write(config)
+            return True
+    except:
+        return False
+
+
+def reload_nginx():
+    try:
+        os.system("nginx -s reload")
+        return True
+    except:
+        return False
+
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    config, count_platforms, application_name = generate_config(args)
+    if (not config):
+        if (args.verbose):
+            print("Error while generating configuration.")
+        sys.exit(1)
+    if (args.verbose):
+        if (count_platforms == 0):
+            print("An empty configuration has been generated.")
+        else:
+            print("{count} service(s) has been added to the configuration.".format(count=count_platforms))
+    if (count_platforms):
+        print("Streaming endpoint : {application}".format(application=application_name))
+    status = write_config(config)
+    if (args.verbose):
+        print("Configuration as been saved." if status else "Error while saving configuration.")
+    if (not status):
+        sys.exit(1)
+    status = reload_nginx()
+    if (args.verbose):
+        print("Nginx configuration has been reloaded" if status else "Error while reloading Nginx configuration.")
+    sys.exit(not status)
