@@ -17,6 +17,10 @@ parser.add_argument('--twitch-test', help="Switch to bandwidth test mode on Twit
 parser.add_argument('--youtube', type=str, help="YouTube streaming key", metavar="streaming_key")
 parser.add_argument('--youtube-server', default="rtmp://a.rtmp.youtube.com/live2/", type=str, help="YouTube streaming server", metavar="streaming_server")
 
+# Facebook
+parser.add_argument('--facebook', type=str, help="Facebook streaming key", metavar="streaming_key")
+parser.add_argument('--facebook-server', default="rtmp://live-api-s.facebook.com:80/rtmp/", type=str, help="Facebook streaming server", metavar="streaming_server")
+
 config_template = """
 rtmp {
 
@@ -63,6 +67,10 @@ def generate_config(args):
     # YouTube support
     if (args.youtube):
         platforms.append(add_platform("YouTube", args.youtube_server, args.youtube))
+
+    # Facebook support
+    if (args.youtube):
+        platforms.append(add_platform("Facebook", args.facebook_server, args.facebook))
 
     if (len(platforms) != 0):
         application = application_template.replace("$NAME", application_name)
