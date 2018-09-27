@@ -1,4 +1,4 @@
-#!/bin/sh python
+#!/usr/bin/env python
 
 import sys
 import os
@@ -9,16 +9,16 @@ parser = argparse.ArgumentParser(description="Stream manager")
 parser.add_argument('-v', '--verbose', help="Verbose mode", action='store_true')
 
 # Twitch
-parser.add_argument('--twitch', type=str, help="Twitch streaming key", metavar="streaming_key")
+parser.add_argument('--twitch', action='append', type=str, help="Twitch streaming keys", metavar="streaming_key")
 parser.add_argument('--twitch-server', default="rtmp://live-cdg.twitch.tv/app/", type=str, help="Twitch streaming server", metavar="streaming_server")
 parser.add_argument('--twitch-test', help="Switch to bandwidth test mode on Twitch", action='store_true')
 
 # YouTube
-parser.add_argument('--youtube', type=str, help="YouTube streaming key", metavar="streaming_key")
+parser.add_argument('--youtube', action='append', type=str, help="YouTube streaming keys", metavar="streaming_key")
 parser.add_argument('--youtube-server', default="rtmp://a.rtmp.youtube.com/live2/", type=str, help="YouTube streaming server", metavar="streaming_server")
 
 # Facebook
-parser.add_argument('--facebook', type=str, help="Facebook streaming key", metavar="streaming_key")
+parser.add_argument('--facebook', action='append', type=str, help="Facebook streaming keys", metavar="streaming_key")
 parser.add_argument('--facebook-server', default="rtmp://live-api-s.facebook.com:80/rtmp/", type=str, help="Facebook streaming server", metavar="streaming_server")
 
 config_template = """
@@ -51,7 +51,7 @@ def add_platform(service, server, key, args=None):
         formated_args = "?" + "&".join(args)
     return """
             # {service}
-            push {server}{key}{args}
+            push {server}{key}{args};
 """.format(service=service, server=server, key=key, args=formated_args)
 
 
@@ -62,15 +62,18 @@ def generate_config(args):
     
     # Twitch support
     if (args.twitch):
-        platforms.append(add_platform("Twitch", args.twitch_server, args.twitch, ["bandwidthtest=true"] if args.twitch_test else None))
+        for key in args.twitch:
+            platforms.append(add_platform("Twitch", args.twitch_server, key, ["bandwidthtest=true"] if args.twitch_test else None))
 
     # YouTube support
     if (args.youtube):
-        platforms.append(add_platform("YouTube", args.youtube_server, args.youtube))
+        for key in args.youtube:
+            platforms.append(add_platform("YouTube", args.youtube_server, key))
 
     # Facebook support
     if (args.youtube):
-        platforms.append(add_platform("Facebook", args.facebook_server, args.facebook))
+        for key in args.youtube:
+            platforms.append(add_platform("Facebook", args.facebook_server, key))
 
     if (len(platforms) != 0):
         application = application_template.replace("$NAME", application_name)

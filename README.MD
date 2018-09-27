@@ -6,6 +6,8 @@ This streaming setup is using Docker (and Docker Compose) to deploy easily all t
 
 ### How to deploy
 
+Note : You will need to setup NodeCG before deploying containers.
+
 ````sh
 $> docker-compose up -d
 ````
@@ -34,6 +36,8 @@ $> docker exec -it $CONTAINER_NAME stream $ARGS
 - `--twitch-test` : Enable Bandwidth test flag for Twitch stream
 - `--youtube $STREAMING_KEY` : YouTube Streaming key
 - `--youtube-server $SERVER_URL` : YouTube Streaming server (Default : `rtmp://a.rtmp.youtube.com/live2/`)
+- `--facebook $STREAMING_KEY` : Facebook Streaming key
+- `--facebook-server $SERVER_URL` : Facebook Streaming server (Default : `rtmp://live-api-s.facebook.com:80/rtmp/`)
 - `-v, --verbose` : Verbose mode
 
 ##### Modes
@@ -58,6 +62,10 @@ $> # To stream on Twitch & YouTube
 $> docker exec -it $CONTAINER_NAME stream --twitch $STREAMING_KEY --youtube $STREAMING_KEY
 Streaming endpoint : XXXXXXXXXXXXXXXXXXXX
 
+$> # To stream on 2 Facebook accounts
+$> docker exec -it $CONTAINER_NAME stream --facebook $STREAMING_KEY_1 --facebook $STREAMING_KEY_2
+Streaming endpoint : XXXXXXXXXXXXXXXXXXXX
+
 ````
 
 - Without arguments
@@ -77,6 +85,20 @@ NodeCG is a Node.JS based server to manage visual items (bundles).
 
 Its dashboard is available on port 9090.
 
+#### How to setup
+
+##### Authentication setup
+
+You will need to generate a secret and put it as value for `sessionSecret` in `nodecg/config.json`.
+
+To add users, you can set accounts in `allowedUsers` list. Users must have the following structure :
+````json
+{
+    "username": "username",
+    "password": "password"
+}
+````
+
 #### Bundles
 
 ##### Status Message
@@ -89,4 +111,5 @@ It has 3 basic modes (Incoming, AFK, End) and a Clear mode, but you can also cus
 - [ ] Chatroom integration
 - [ ] Twitch notifications (Follow, subscription, bits, ...)
 - [ ] YouTube notifications (Subscribe, like, ...)
+- [ ] Facebook notifications (Subscribe, like, ...)
 - [ ] ...

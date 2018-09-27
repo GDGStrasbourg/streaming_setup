@@ -15,4 +15,5 @@ services:
      - 9090:9090
     volumes:
      - ./nodecg/bundles:/usr/src/app/bundles
+     - ./nodecg/config.json:/usr/src/app/cfg/nodecg.json
     restart: always
