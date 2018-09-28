@@ -72,7 +72,7 @@ def generate_config(args):
 
     # Facebook support
     if (args.facebook):
-        for key in args.youtube:
+        for key in args.facebook:
             platforms.append(add_platform("Facebook", args.facebook_server, key))
 
     if (len(platforms) != 0):
